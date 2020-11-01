@@ -12,8 +12,11 @@ namespace WebApplication1
             // Web API configuration and services
 
             // Web API routes
+
+            // Enable Attribute routing.
             config.MapHttpAttributeRoutes();
 
+            // Convention-based routing.
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

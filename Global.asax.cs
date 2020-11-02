@@ -14,9 +14,9 @@ namespace WebApplication1
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);           // TODO: Is there not a conflict between these routes and the ones in RouteConfig?
+            GlobalConfiguration.Configure(WebApiConfig.Register);           // Routes for Web Api. There are no conflicts between these routes and the ones for MVC, because the Web Api routes start with 'api/'
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);                  // Routes for MVC
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }

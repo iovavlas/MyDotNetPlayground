@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -78,9 +79,9 @@ namespace WebApplication1.Controllers
         }
         */
 
-
+        
         // POST: api/Person
-        [HttpPost]                          // We need this attribute, because the method name doesn't include the word 'Post'.
+        [HttpPost]                          // We need this attribute, because the method name doesn't start with the word 'Post'.
         //[ValidatePersonName]              // It won't get triggered. Why? --> Because it's an attribute validator, not a model validator. We use it inside the model class. 
         //[NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
         [ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.   TODO: Not working?
@@ -100,6 +101,24 @@ namespace WebApplication1.Controllers
             return person;
         }
 
+
+        // POST: api/Person/v2
+        [HttpPost]
+        [Route("api/Person/v2")]            // We need this attribute, because we have 2 POST methods with the same parameters at the same end point.
+        public IHttpActionResult CreatePersonRestfully(Person person)           // Demo of a more RESTful API approach, returning a 201 Created, the location of the new item and the new item, instead of 200 OK and just the new item.
+        {
+            if (!ModelState.IsValid)     
+            {
+                return BadRequest();
+            }
+
+            // insert the person in the DB (not shown). Add the person to the list instead...
+            int generatedId = (this.persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            person.Id = generatedId;
+            this.persons.Add(person);               
+
+            return Created(new Uri(Request.RequestUri + "/" + generatedId), person);
+        }
 
 
         // PUT: api/Person/5

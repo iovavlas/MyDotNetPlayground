@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
@@ -24,11 +26,13 @@ namespace WebApplication1
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            /* return JSON data to the client, instead of XML */ 
+            /* return JSON data to the client, instead of XML. Use camelCase instead of PascalCase. */ 
             if (config.Formatters != null)
             {
                 config.Formatters.Clear();
                 config.Formatters.Add(new JsonMediaTypeFormatter());
+                config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                config.Formatters.JsonFormatter.SerializerSettings.Formatting = Formatting.Indented;
             } 
         }
     }

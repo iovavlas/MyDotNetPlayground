@@ -5,7 +5,7 @@ using System.Web;
 
 namespace WebApplication1.Models
 {
-    public static class Database
+    public static class Database                /* With this static class, we can simulate a singleton. Otherwise, any changes to the list won't get persisted, as the controller constructor gets executed every time */ 
     {
         private static List<Person> persons;
 
@@ -15,6 +15,7 @@ namespace WebApplication1.Models
             {
                 if (persons == null)
                 {
+                    // some sample data for the moment...
                     persons = new List<Person>();
                     persons.Add(new Person(1, "Name1", 30));
                     persons.Add(new Person { Id = 4, Name = "Name4" });     // Why do I get a compile error? --> I need a parameterless constructor for that. The 3rd one.

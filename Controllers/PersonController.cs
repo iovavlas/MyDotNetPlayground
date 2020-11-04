@@ -69,7 +69,7 @@ namespace WebApplication1.Controllers
         // POST: api/Person
         [HttpPost]                          // We need this attribute, because the method name doesn't start with the word 'Post'.
         //[ValidatePersonName]              // It won't get triggered. Why? --> Because it's an attribute validator, not a model validator. We use it inside the model class. 
-        //[NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
+        [NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
         [ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.   TODO: Not working?
         public Person CreatePerson(Person person)
         {
@@ -92,15 +92,15 @@ namespace WebApplication1.Controllers
         // POST: api/Person/v2
         [HttpPost]
         [Route("api/Person/v2")]            // We need this attribute, because we have 2 POST methods with the same parameters at the same end point.
-        public IHttpActionResult CreatePersonRestfully(Person person)           // Demo of a more RESTful API approach, returning a 201 Created, the location of the new item(resource) and the new item(resource) itself, instead of 200 OK and just the new item.
-        {
+        public IHttpActionResult CreatePersonRestfully(Person person)           // Demo of a more RESTful API approach, returning a 201 Created, the location of the new item(resource) and the new item(resource) itself, 
+        {                                                                       // instead of 200 OK and just the new item.
             if (!ModelState.IsValid)     
             {
                 return BadRequest();
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
-            int generatedId = (Database.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            int generatedId = Database.Persons.Max(x => x.Id) + 1;
             person.Id = generatedId;
             Database.Persons.Add(person);               
 
@@ -119,10 +119,10 @@ namespace WebApplication1.Controllers
         // Is it safer? How do we then determine, if we need to update or insert a resource? 
         public void UpdatePerson(int id, Person person)
         {
-            if (!ModelState.IsValid)     
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
+            //if (!ModelState.IsValid)     
+            //{
+            //    throw new HttpResponseException(HttpStatusCode.BadRequest);
+            //}
 
             // update the person in the DB (not shown). We do it in the list instead...
             var personInDb = Database.Persons.SingleOrDefault(item => item.Id == id);
@@ -131,33 +131,26 @@ namespace WebApplication1.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            if (personInDb.Id != id)
+            if (person.Id != 0 && person.Id != id)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            personInDb = person;    // TODO: DeepClone() ? 
+            //personInDb = person;    // TODO: DeepClone() ? 
+            personInDb.Name = person.Name;
+            personInDb.Age = person.Age;
         }
 
 
         // DELETE: api/Person/5
         public void Delete(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
             // delete the person from the DB (not shown). We delete it from the list instead...
             var personInDb = Database.Persons.SingleOrDefault(item => item.Id == id);
 
             if (personInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-            if (personInDb.Id != id)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             Database.Persons.Remove(personInDb);

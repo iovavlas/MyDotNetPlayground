@@ -22,9 +22,10 @@ namespace WebApplication1.Models
         }
         public Person()     /* Demo of a parameterless constructor */ 
         { }
-
+        
         /* Tip: 'ctor' + tab --> constructor snippet */
         /* Tip: 'prop' + tab --> new property snippet */
+        /* Tip: 'propfull' + tab --> new property with a getter and setter - snippet */
         public int Id { get; set; }
 
         /* Demo of overriding default conventions using Data annotations. A string is by default nullable */

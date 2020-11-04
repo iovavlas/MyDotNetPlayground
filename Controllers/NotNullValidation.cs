@@ -19,12 +19,12 @@ namespace WebApplication1.Controllers
                 rawRequest = stream.ReadToEnd();
             }
 
-            if (string.IsNullOrEmpty(rawRequest))    // TODO: returns always true...?
+            if (string.IsNullOrEmpty(rawRequest))
             {
                 actionContext.ModelState.AddModelError("dummy", "request is empty!!!");
             }
 
-            base.OnActionExecuting(actionContext);
+            base.OnActionExecuting(actionContext);      // resume execution of the OnActionExecuting() method in the main (base) class... Like 'super.OnActionExecuting()'
         }
     }
 }

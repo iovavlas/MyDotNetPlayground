@@ -11,27 +11,28 @@ namespace WebApplication1.Controllers
 {
     public class PersonController : ApiController
     {
-        public List<Person> persons { get; private set; }
+        public List<Person> Persons { get; private set; }
+        private List<Person> persons;
 
         public PersonController()
         {
             // some sample data for the moment...
-            persons = new List<Person>();
-            persons.Add(new Person(1, "Name1", 30));
-            persons.Add(new Person { Id = 4, Name = "Name4" });     // Why do I get a compile error? --> I need a parameterless constructor for that. The 3rd one.
-            persons.Add(new Person(5, "Name5") { Age = 25 });
-            persons.Add(new Person(2, "Name2"));
-            persons.Add(new Person(3, "Name3", 'c'));               // Why don't I get a compile error, since 'Age' should be an int? --> implicit cast 
+            Persons = new List<Person>();
+            Persons.Add(new Person(1, "Name1", 30));
+            Persons.Add(new Person { Id = 4, Name = "Name4" });     // Why do I get a compile error? --> I need a parameterless constructor for that. The 3rd one.
+            Persons.Add(new Person(5, "Name5") { Age = 25 });
+            Persons.Add(new Person(2, "Name2"));
+            Persons.Add(new Person(3, "Name3", 'c'));               // Why don't I get a compile error, since 'Age' should be an int? --> implicit cast 
         }
 
 
         // GET: api/Person
         public IEnumerable<Person> GetAllPersons()
         {
-            var result = this.persons;
+            var result = this.Persons;
 
             //result = (List<Person>)persons.OrderBy(person => person.Id);       // We get a casting error, if we don't call the 'ToList()' method.
-            result = this.persons.OrderBy(person => person.Id).ToList();
+            result = this.Persons.OrderBy(person => person.Id).ToList();
 
             //Console.WriteLine("test");        // To see the output, we must first attach to process. No need to select 'w3wp' when using IIS Express. For a better logger see Serilog.net ...
             //Trace.WriteLine("test");
@@ -52,7 +53,7 @@ namespace WebApplication1.Controllers
         public Person GetPerson(int id)
         {
             //var result = persons.Find(person => person.Id == id);
-            var result = this.persons.SingleOrDefault(person => person.Id == id);
+            var result = this.Persons.SingleOrDefault(person => person.Id == id);       // 'SingleOrDefault' does the same thing as 'Find'...
 
             if (result == null)         // In FC we leave this check to the client
             {
@@ -94,9 +95,9 @@ namespace WebApplication1.Controllers
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
-            int generatedId = (this.persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            int generatedId = (this.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
             person.Id = generatedId;
-            this.persons.Add(person);               // TODO: The new person addition won't get persisted. Why is that? 
+            this.Persons.Add(person);               // The new person addition won't get persisted. Why is that? --> The constructor gets executed after every api call. We need a singleton for that...
 
             return person;
         }
@@ -105,7 +106,7 @@ namespace WebApplication1.Controllers
         // POST: api/Person/v2
         [HttpPost]
         [Route("api/Person/v2")]            // We need this attribute, because we have 2 POST methods with the same parameters at the same end point.
-        public IHttpActionResult CreatePersonRestfully(Person person)           // Demo of a more RESTful API approach, returning a 201 Created, the location of the new item and the new item, instead of 200 OK and just the new item.
+        public IHttpActionResult CreatePersonRestfully(Person person)           // Demo of a more RESTful API approach, returning a 201 Created, the location of the new item(resource) and the new item(resource) itself, instead of 200 OK and just the new item.
         {
             if (!ModelState.IsValid)     
             {
@@ -113,9 +114,9 @@ namespace WebApplication1.Controllers
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
-            int generatedId = (this.persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            int generatedId = (this.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
             person.Id = generatedId;
-            this.persons.Add(person);               
+            this.Persons.Add(person);               
 
             return Created(new Uri(Request.RequestUri + "/" + generatedId), person);
         }
@@ -128,6 +129,8 @@ namespace WebApplication1.Controllers
             - a complex type in the body
             then you don't have to add any attributes (neither [FromBody] nor [FromUri]).
          */
+        // TODO: Why do we use in FC the POST Verb to update a resource, instead of PUT? 
+        // Is it safer? How do we then determine, if we need to update or insert a resource? 
         public void UpdatePerson(int id, Person person)
         {
             if (!ModelState.IsValid)     
@@ -136,7 +139,7 @@ namespace WebApplication1.Controllers
             }
 
             // update the person in the DB (not shown). We do it in the list instead...
-            var personInDb = this.persons.SingleOrDefault(item => item.Id == id);
+            var personInDb = this.Persons.SingleOrDefault(item => item.Id == id);
 
             if (personInDb == null)
             {
@@ -160,7 +163,7 @@ namespace WebApplication1.Controllers
             }
 
             // delete the person from the DB (not shown). We delete it from the list instead...
-            var personInDb = this.persons.SingleOrDefault(item => item.Id == id);
+            var personInDb = this.Persons.SingleOrDefault(item => item.Id == id);
 
             if (personInDb == null)
             {
@@ -171,7 +174,7 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            this.persons.Remove(personInDb);
+            this.Persons.Remove(personInDb);
         }
     }
 }

@@ -11,28 +11,13 @@ namespace WebApplication1.Controllers
 {
     public class PersonController : ApiController
     {
-        public List<Person> Persons { get; private set; }
-        private List<Person> persons;
-
-        public PersonController()
-        {
-            // some sample data for the moment...
-            Persons = new List<Person>();
-            Persons.Add(new Person(1, "Name1", 30));
-            Persons.Add(new Person { Id = 4, Name = "Name4" });     // Why do I get a compile error? --> I need a parameterless constructor for that. The 3rd one.
-            Persons.Add(new Person(5, "Name5") { Age = 25 });
-            Persons.Add(new Person(2, "Name2"));
-            Persons.Add(new Person(3, "Name3", 'c'));               // Why don't I get a compile error, since 'Age' should be an int? --> implicit cast 
-        }
-
-
         // GET: api/Person
         public IEnumerable<Person> GetAllPersons()
         {
-            var result = this.Persons;
+            var result = Database.Persons;
 
             //result = (List<Person>)persons.OrderBy(person => person.Id);       // We get a casting error, if we don't call the 'ToList()' method.
-            result = this.Persons.OrderBy(person => person.Id).ToList();
+            result = Database.Persons.OrderBy(person => person.Id).ToList();
 
             //Console.WriteLine("test");        // To see the output, we must first attach to process. No need to select 'w3wp' when using IIS Express. For a better logger see Serilog.net ...
             //Trace.WriteLine("test");
@@ -53,7 +38,7 @@ namespace WebApplication1.Controllers
         public Person GetPerson(int id)
         {
             //var result = persons.Find(person => person.Id == id);
-            var result = this.Persons.SingleOrDefault(person => person.Id == id);       // 'SingleOrDefault' does the same thing as 'Find'...
+            var result = Database.Persons.SingleOrDefault(person => person.Id == id);       // 'SingleOrDefault' does the same thing as 'Find'...
 
             if (result == null)         // In FC we leave this check to the client
             {
@@ -95,9 +80,10 @@ namespace WebApplication1.Controllers
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
-            int generatedId = (this.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            //int generatedId = (Database.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            int generatedId = Database.Persons.Max(x => x.Id) + 1;
             person.Id = generatedId;
-            this.Persons.Add(person);               // The new person addition won't get persisted. Why is that? --> The constructor gets executed after every api call. We need a singleton for that...
+            Database.Persons.Add(person);               // The new person addition won't get persisted. Why is that? --> The constructor gets executed after every api call. We need a singleton for that...
 
             return person;
         }
@@ -114,9 +100,9 @@ namespace WebApplication1.Controllers
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
-            int generatedId = (this.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
+            int generatedId = (Database.Persons.OrderByDescending(v => v.Id).First()).Id + 1;
             person.Id = generatedId;
-            this.Persons.Add(person);               
+            Database.Persons.Add(person);               
 
             return Created(new Uri(Request.RequestUri + "/" + generatedId), person);
         }
@@ -139,7 +125,7 @@ namespace WebApplication1.Controllers
             }
 
             // update the person in the DB (not shown). We do it in the list instead...
-            var personInDb = this.Persons.SingleOrDefault(item => item.Id == id);
+            var personInDb = Database.Persons.SingleOrDefault(item => item.Id == id);
 
             if (personInDb == null)
             {
@@ -163,7 +149,7 @@ namespace WebApplication1.Controllers
             }
 
             // delete the person from the DB (not shown). We delete it from the list instead...
-            var personInDb = this.Persons.SingleOrDefault(item => item.Id == id);
+            var personInDb = Database.Persons.SingleOrDefault(item => item.Id == id);
 
             if (personInDb == null)
             {
@@ -174,7 +160,7 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            this.Persons.Remove(personInDb);
+            Database.Persons.Remove(personInDb);
         }
     }
 }

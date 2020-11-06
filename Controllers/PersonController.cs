@@ -96,7 +96,7 @@ namespace WebApplication1.Controllers
         {                                                                       // instead of 200 OK and just the new item.
             if (!ModelState.IsValid)     
             {
-                return BadRequest();
+                return BadRequest("invalid person data");
             }
 
             // insert the person in the DB (not shown). Add the person to the list instead...
@@ -136,7 +136,7 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            //personInDb = person;    // TODO: DeepClone() ? 
+            personInDb = person;    // TODO: DeepClone() ? 
             personInDb.Name = person.Name;
             personInDb.Age = person.Age;
         }

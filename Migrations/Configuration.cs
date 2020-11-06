@@ -9,7 +9,7 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             //ContextKey = "WebApplication1.Models.CampContext";
         }
 
@@ -20,7 +20,6 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
-            /*
             if (!context.Camps.Any())
             {
                 context.Camps.AddOrUpdate(x => x.CampId,
@@ -82,7 +81,6 @@
                   }
                 ); 
             }
-            */
         }
     }
 }

@@ -184,6 +184,10 @@
     <Compile Include="Migrations\202011061305400_Added_new_Models_and_updated_the_Camp_Model.designer.cs">
       <DependentUpon>202011061305400_Added_new_Models_and_updated_the_Camp_Model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011061355526_Seed_the_Database_with_some_sample_data.cs" />
+    <Compile Include="Migrations\202011061355526_Seed_the_Database_with_some_sample_data.designer.cs">
+      <DependentUpon>202011061355526_Seed_the_Database_with_some_sample_data.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Camp.cs" />
     <Compile Include="Models\Database.cs" />
@@ -282,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011061305400_Added_new_Models_and_updated_the_Camp_Model.resx">
       <DependentUpon>202011061305400_Added_new_Models_and_updated_the_Camp_Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011061355526_Seed_the_Database_with_some_sample_data.resx">
+      <DependentUpon>202011061355526_Seed_the_Database_with_some_sample_data.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

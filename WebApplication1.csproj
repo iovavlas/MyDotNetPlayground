@@ -190,10 +190,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Camp.cs" />
-    <Compile Include="Models\CampRepository.cs" />
-    <Compile Include="Models\Database.cs" />
-    <Compile Include="Models\CampContext.cs" />
-    <Compile Include="Models\ICampRepository.cs" />
+    <Compile Include="Repositories\CampRepository.cs" />
+    <Compile Include="Repositories\Database.cs" />
+    <Compile Include="Repositories\CampContext.cs" />
+    <Compile Include="Repositories\ICampRepository.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Speaker.cs" />

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using AutoMapper;
 using WebApplication1.Models;
 
 namespace WebApplication1.App_Start
@@ -31,6 +32,15 @@ namespace WebApplication1.App_Start
             bldr.RegisterType<CampRepository>()
               .As<ICampRepository>()
               .InstancePerRequest();
+
+
+            var mapConfig = new MapperConfiguration(cfg => {
+                cfg.AddProfile(new CampMappingProfile());
+            });
+
+            bldr.RegisterInstance(mapConfig.CreateMapper())
+                .As<IMapper>()
+                .SingleInstance();
         }
     }
 }

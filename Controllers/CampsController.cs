@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -16,10 +17,12 @@ namespace WebApplication1.Controllers
     public class CampsController : ApiController
     {
         private readonly ICampRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CampsController(ICampRepository repository)          // by using Autofac DI... 
+        public CampsController(ICampRepository repository, IMapper mapper)          // DI by using Autofac... 
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
 
@@ -38,7 +41,11 @@ namespace WebApplication1.Controllers
                 return InternalServerError(ex);
             }
 
-            return Ok(result);
+            //return Ok(result);                // It's a good practice to return a DTO (subset of our entity/model) instead of the whole entity/model.
+
+            // Mapping (Model/Entity --> Dto)
+            CampDto[] mappedResult = _mapper.Map<Camp[], CampDto[]>(result);
+            return Ok(mappedResult);
         }
 
 

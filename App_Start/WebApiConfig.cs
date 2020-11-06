@@ -14,7 +14,7 @@ namespace WebApplication1
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            AutofacConfig.Register();
+            AutofacConfig.Register();       // DI
 
             // Web API routes
 

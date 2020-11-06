@@ -201,11 +201,11 @@
     <Compile Include="Controllers\CampsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
-    <Compile Include="Controllers\NotNullValidation.cs" />
+    <Compile Include="Validators\NotNullValidation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
-    <Compile Include="Controllers\PersonValidator.cs" />
-    <Compile Include="Controllers\ValidateInputModel.cs" />
-    <Compile Include="Controllers\ValidatePersonName.cs" />
+    <Compile Include="Validators\PersonValidator.cs" />
+    <Compile Include="Validators\ValidateInputModel.cs" />
+    <Compile Include="Validators\ValidatePersonName.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Dtos\CampDto.cs" />
     <Compile Include="Global.asax.cs">

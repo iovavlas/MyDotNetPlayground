@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
+using WebApplication1.App_Start;
 
 namespace WebApplication1
 {
@@ -13,6 +14,7 @@ namespace WebApplication1
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            AutofacConfig.Register();
 
             // Web API routes
 

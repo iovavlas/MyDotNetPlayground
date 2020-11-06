@@ -13,7 +13,7 @@ namespace WebApplication1.Models
         }
 
         public DbSet<Camp> Camps { get; set; }
-        //public DbSet<Speaker> Speakers { get; set; }
-        //public DbSet<Talk> Talks { get; set; }
+        public DbSet<Speaker> Speakers { get; set; }
+        public DbSet<Talk> Talks { get; set; }
     }
 }

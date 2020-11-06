@@ -39,3 +39,7 @@ To run a migration, in order to sync with the DB:
 	PM> update-database
 Under 'App_Data' we should then see a hidden DB file. 
 By opening it, we should then navigate to the DB, under Server Explorer.
+
+
+
+We can override the default EF conventions for a column definition (e.g. a string is nullable by default) using Data Annotations in our Model (e.g. [Required]) and then running a migration.

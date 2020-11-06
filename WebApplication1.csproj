@@ -180,11 +180,18 @@
     <Compile Include="Migrations\202011061205444_InitialModel.designer.cs">
       <DependentUpon>202011061205444_InitialModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011061305400_Added_new_Models_and_updated_the_Camp_Model.cs" />
+    <Compile Include="Migrations\202011061305400_Added_new_Models_and_updated_the_Camp_Model.designer.cs">
+      <DependentUpon>202011061305400_Added_new_Models_and_updated_the_Camp_Model.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Camp.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\CampContext.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Speaker.cs" />
+    <Compile Include="Models\Talk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -272,6 +279,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202011061205444_InitialModel.resx">
       <DependentUpon>202011061205444_InitialModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011061305400_Added_new_Models_and_updated_the_Camp_Model.resx">
+      <DependentUpon>202011061305400_Added_new_Models_and_updated_the_Camp_Model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

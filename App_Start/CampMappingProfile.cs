@@ -12,8 +12,8 @@ namespace WebApplication1.App_Start
         public CampMappingProfile()
         {
             CreateMap<Camp, CampDto>()
-                .ForMember(camp => camp.Venue, option => option.MapFrom(m => m.Location.VenueName));        // Get the Venue from the Camp.Location.VenueName
-            CreateMap<CampDto, Camp>();
+                .ForMember(camp => camp.Venue, option => option.MapFrom(m => m.Location.VenueName))        // Get the Venue from the Camp.Location.VenueName
+                .ReverseMap();
 
 
             CreateMap<Talk, TalkDto>();

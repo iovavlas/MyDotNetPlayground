@@ -53,7 +53,7 @@ namespace WebApplication1.Controllers
 
 
         // GET: api/Camps/5
-        [Route("{moniker}")]
+        [Route("{moniker}", Name = "GetCamp")]
         [ResponseType(typeof(CampDto))]         // useful when returning an IHttpActionResult...
         public async Task<IHttpActionResult> GetCamp(string moniker, bool includeTalks = false)
         {
@@ -105,6 +105,38 @@ namespace WebApplication1.Controllers
         }
 
 
+        // POST: api/Camps
+        [Route()]
+        [HttpPost]
+        [ResponseType(typeof(CampDto))]
+        public async Task<IHttpActionResult> CreateCamp(CampDto campDto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Camp camp = _mapper.Map<Camp>(campDto);
+
+                    _repository.AddCamp(camp);
+
+                    if (await _repository.SaveChangesAsync())
+                    {
+                        var newCamp = _mapper.Map<CampDto>(camp);                   // this may include e.g. an id generated from the DB...
+
+                        //return Created(new Uri(Request.RequestUri + "/" + newCamp.Moniker), newCamp);
+                        return CreatedAtRoute("GetCamp", new { moniker = newCamp.Moniker }, newCamp);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
+
+
 
         /*
         // PUT: api/Camps/5
@@ -140,21 +172,6 @@ namespace WebApplication1.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Camps
-        [ResponseType(typeof(Camp))]
-        public IHttpActionResult PostCamp(Camp camp)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Camps.Add(camp);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = camp.CampId }, camp);
         }
 
         // DELETE: api/Camps/5

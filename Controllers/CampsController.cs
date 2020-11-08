@@ -38,9 +38,9 @@ namespace WebApplication1.Controllers
             {
                 result = await _repository.GetAllCampsAsync();
             }
-            catch (Exception ex)                // Although it's a bad practice to return the exception, e.g. for safety reasons.
+            catch (Exception ex)                
             {
-                return InternalServerError(ex);
+                return InternalServerError(ex); // Although it's a bad practice to return the exception, e.g. we may not want to reveil some information for safety reasons.
             }
 
             //return Ok(result);                // It's a good practice to return a DTO (subset of our entity/model) instead of the whole entity/model.

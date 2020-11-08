@@ -14,6 +14,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [RoutePrefix("api/camps")]              
     public class CampsController : ApiController
     {
         private readonly ICampRepository _repository;
@@ -28,6 +29,7 @@ namespace WebApplication1.Controllers
 
 
         // GET: api/Camps
+        [Route()]                               // the URI pattern is hier empty, because we use the [RoutePrefix] attribute for the whole Controller.
         public async Task<IHttpActionResult> GetCamps()
         {
             Camp[] result; 
@@ -36,7 +38,7 @@ namespace WebApplication1.Controllers
             {
                 result = await _repository.GetAllCampsAsync();
             }
-            catch (Exception ex)                // Although it's a bad practice to return the exception, e.g. for safety reasons
+            catch (Exception ex)                // Although it's a bad practice to return the exception, e.g. for safety reasons.
             {
                 return InternalServerError(ex);
             }
@@ -49,22 +51,37 @@ namespace WebApplication1.Controllers
         }
 
 
+        // GET: api/Camps/5
+        [Route("{moniker}")]
+        [ResponseType(typeof(Camp))]            // useful when returning an IHttpActionResult...
+        public async Task<IHttpActionResult> GetCamp(string moniker)
+        {
+            Camp result;
+
+            try
+            {
+                result = await _repository.GetCampAsync(moniker);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return InternalServerError(ex);
+            }
+
+            // Mapping (Model/Entity --> Dto)
+            CampDto mappedResult = _mapper.Map<CampDto>(result);
+            return Ok(mappedResult);
+        }
+
+
 
 
         /*
-        // GET: api/Camps/5
-        [ResponseType(typeof(Camp))]
-        public IHttpActionResult GetCamp(int id)
-        {
-            Camp camp = db.Camps.Find(id);
-            if (camp == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(camp);
-        }
-
         // PUT: api/Camps/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutCamp(int id, Camp camp)

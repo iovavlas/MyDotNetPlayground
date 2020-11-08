@@ -13,8 +13,15 @@ namespace WebApplication1.App_Start
         {
             CreateMap<Camp, CampDto>()
                 .ForMember(camp => camp.Venue, option => option.MapFrom(m => m.Location.VenueName));        // Get the Venue from the Camp.Location.VenueName
-
             CreateMap<CampDto, Camp>();
+
+
+            CreateMap<Talk, TalkDto>();
+            CreateMap<TalkDto, Talk>();
+
+
+            CreateMap<Speaker, SpeakerDto>();
+            CreateMap<SpeakerDto, Speaker>();
         }
     }
 }

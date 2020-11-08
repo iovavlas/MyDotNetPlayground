@@ -201,6 +201,8 @@
     <Compile Include="Controllers\CampsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Dtos\SpeakerDto.cs" />
+    <Compile Include="Dtos\TalkDto.cs" />
     <Compile Include="Validators\NotNullValidation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Validators\PersonValidator.cs" />

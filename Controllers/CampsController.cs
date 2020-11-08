@@ -29,14 +29,15 @@ namespace WebApplication1.Controllers
 
 
         // GET: api/Camps
+        // GET: api/Camps?includeTalks=true     // Query Strings should always be optional.
         [Route()]                               // the URI pattern is hier empty, because we use the [RoutePrefix] attribute for the whole Controller.
-        public async Task<IHttpActionResult> GetCamps()
+        public async Task<IHttpActionResult> GetCamps(bool includeTalks = false)
         {
             Camp[] result; 
 
             try
             {
-                result = await _repository.GetAllCampsAsync();
+                result = await _repository.GetAllCampsAsync(includeTalks);
             }
             catch (Exception ex)                
             {
@@ -54,13 +55,13 @@ namespace WebApplication1.Controllers
         // GET: api/Camps/5
         [Route("{moniker}")]
         [ResponseType(typeof(Camp))]            // useful when returning an IHttpActionResult...
-        public async Task<IHttpActionResult> GetCamp(string moniker)
+        public async Task<IHttpActionResult> GetCamp(string moniker, bool includeTalks = false)
         {
             Camp result;
 
             try
             {
-                result = await _repository.GetCampAsync(moniker);
+                result = await _repository.GetCampAsync(moniker, includeTalks);
 
                 if (result == null)
                 {

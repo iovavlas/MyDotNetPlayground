@@ -12,6 +12,7 @@ namespace WebApplication1.Models
         public DateTime EventDate { get; set; } = DateTime.MinValue;
         public int Length { get; set; } = 1;
 
+
         // include Location Data...
         //public string LocationVenueName { get; set; }             // using the 'Location' prefix, we don't need to configure anything. Automapper recognises that automatically.
         public string Venue { get; set; }                           // If we don't want to use the 'Location' prefix, we must adjust the mapping profile. 
@@ -22,5 +23,9 @@ namespace WebApplication1.Models
         public string LocationStateProvince { get; set; }
         public string LocationPostalCode { get; set; }
         public string LocationCountry { get; set; }
+
+
+        // include Talk Data...
+        public ICollection<TalkDto> Talks { get; set; }
     }
 }

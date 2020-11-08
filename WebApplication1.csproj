@@ -203,6 +203,10 @@
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Dtos\SpeakerDto.cs" />
     <Compile Include="Dtos\TalkDto.cs" />
+    <Compile Include="Migrations\202011082020208_Validate_CampDto.cs" />
+    <Compile Include="Migrations\202011082020208_Validate_CampDto.designer.cs">
+      <DependentUpon>202011082020208_Validate_CampDto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Validators\NotNullValidation.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Validators\PersonValidator.cs" />
@@ -328,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011061355526_Seed_the_Database_with_some_sample_data.resx">
       <DependentUpon>202011061355526_Seed_the_Database_with_some_sample_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011082020208_Validate_CampDto.resx">
+      <DependentUpon>202011082020208_Validate_CampDto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

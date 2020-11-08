@@ -1,12 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -14,7 +7,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    [RoutePrefix("api/camps")]              
+    [RoutePrefix("api/camps")]
     public class CampsController : ApiController
     {
         private readonly ICampRepository _repository;
@@ -33,13 +26,13 @@ namespace WebApplication1.Controllers
         [Route()]                               // the URI pattern is here empty, because we use the [RoutePrefix] attribute for the whole Controller.
         public async Task<IHttpActionResult> GetCamps(bool includeTalks = false)
         {
-            Camp[] result; 
+            Camp[] result;
 
             try
             {
                 result = await _repository.GetAllCampsAsync(includeTalks);
             }
-            catch (Exception ex)                
+            catch (Exception ex)
             {
                 return InternalServerError(ex); // Although it's a bad practice to return the exception, e.g. we may not want to reveil some information for safety reasons.
             }
@@ -111,9 +104,14 @@ namespace WebApplication1.Controllers
         [ResponseType(typeof(CampDto))]
         public async Task<IHttpActionResult> CreateCamp(CampDto campDto)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (await _repository.GetCampAsync(campDto.Moniker) != null)
+                {
+                    ModelState.AddModelError("Moniker", "Moniker is already in use / not unique!");
+                }
+
+                if (ModelState.IsValid)
                 {
                     Camp camp = _mapper.Map<Camp>(campDto);
 
@@ -121,16 +119,16 @@ namespace WebApplication1.Controllers
 
                     if (await _repository.SaveChangesAsync())
                     {
-                        var newCamp = _mapper.Map<CampDto>(camp);                   // this may include e.g. an id generated from the DB...
+                        var newCamp = _mapper.Map<CampDto>(camp);                   // 'camp' here, after saving, includes an id generated from the DB...
 
                         //return Created(new Uri(Request.RequestUri + "/" + newCamp.Moniker), newCamp);
                         return CreatedAtRoute("GetCamp", new { moniker = newCamp.Moniker }, newCamp);
                     }
                 }
-                catch (Exception ex)
-                {
-                    return InternalServerError(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
             return BadRequest(ModelState);

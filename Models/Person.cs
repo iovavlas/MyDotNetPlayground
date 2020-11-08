@@ -28,7 +28,7 @@ namespace WebApplication1.Models
         /* Tip: 'propfull' + tab --> new property with a getter and setter - snippet */
         public int Id { get; set; }
 
-        /* Demo of overriding default conventions using Data annotations. A string is by default nullable */
+        /* Demo of overriding default conventions using Data annotations. A string is nullable by default */
         [Required]
         //[Required(ErrorMessage = "Please enter person's name. It can't be empty.")]       /* Demo of a custom error message, if we want to override the default one. */
         [StringLength(255)]

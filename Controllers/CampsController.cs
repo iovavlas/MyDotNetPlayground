@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/Camps
         // GET: api/Camps?includeTalks=true     // Query Strings should always be optional.
-        [Route()]                               // the URI pattern is hier empty, because we use the [RoutePrefix] attribute for the whole Controller.
+        [Route()]                               // the URI pattern is here empty, because we use the [RoutePrefix] attribute for the whole Controller.
         public async Task<IHttpActionResult> GetCamps(bool includeTalks = false)
         {
             Camp[] result; 
@@ -54,7 +54,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/Camps/5
         [Route("{moniker}")]
-        [ResponseType(typeof(Camp))]            // useful when returning an IHttpActionResult...
+        [ResponseType(typeof(CampDto))]         // useful when returning an IHttpActionResult...
         public async Task<IHttpActionResult> GetCamp(string moniker, bool includeTalks = false)
         {
             Camp result;
@@ -79,6 +79,30 @@ namespace WebApplication1.Controllers
             return Ok(mappedResult);
         }
 
+
+        // GET: api/Camps/searchByDate?eventDate=2018-10-18&includeTalks=true           // eventDate is here optional...
+        //[Route("searchByDate")] 
+        //      or ... 
+        // GET: api/Camps/searchByDate/2018-10-18&includeTalks=true                     // eventDate is here required and must be part of the [Route()]...
+        [Route("searchByDate/{eventDate:datetime}")]
+        [HttpGet]
+        [ResponseType(typeof(CampDto[]))]
+        public async Task<IHttpActionResult> SearchCampsByEventDate(DateTime eventDate, bool includeTalks = false)
+        {
+            Camp[] result;
+
+            try
+            {
+                result = await _repository.GetAllCampsByEventDate(eventDate, includeTalks);             // on searching we shouldn't return NotFound. An empty Collection is fine...
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            CampDto[] mappedResult = _mapper.Map<CampDto[]>(result);
+            return Ok(mappedResult);
+        }
 
 
 

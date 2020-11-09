@@ -7,6 +7,7 @@ namespace WebApplication1.Controllers
     {
         public PersonValidator()
         {
+            
             RuleFor(model => model.Name)
                 .NotNull()
                 .NotEmpty()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Filter;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -69,8 +70,9 @@ namespace WebApplication1.Controllers
         // POST: api/Person
         [HttpPost]                          // We need this attribute, because the method name doesn't start with the word 'Post'.
         //[ValidatePersonName]              // It won't get triggered. Why? --> Because it's an attribute validator, not a model validator. We use it inside the model class. 
-        //[NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
-        [ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.   TODO: Not working?
+        [NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
+        //[ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.   TODO: Not working?
+        [InputValidation(ValidatorType = typeof(PersonValidator))]
         public Person CreatePerson(Person person)
         {
             if (!ModelState.IsValid)     /* validate the model, according to the data annotation (e.g. [Required]) defined in the model class. 

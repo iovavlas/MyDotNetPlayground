@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace WebApplication1.Controllers
         [HttpPost]                          // We need this attribute, because the method name doesn't start with the word 'Post'.
         //[ValidatePersonName]              // It won't get triggered. Why? --> Because it's an attribute validator, not a model validator. We use it inside the model class. 
         [NotNullValidation]                 // custom model validator, to check if the request body (person) is empty.
-        [ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.   TODO: Not working?
+        [ValidateInputModel(Validator = typeof(PersonValidator))]   // custom model validator using FluentValidation.       Not working? --> we must do some configuration first. See FC bootstrapper...
         public Person CreatePerson(Person person)
         {
             if (!ModelState.IsValid)     /* validate the model, according to the data annotation (e.g. [Required]) defined in the model class. 
@@ -116,8 +117,6 @@ namespace WebApplication1.Controllers
             - a complex type in the body
             then you don't have to add any attributes (neither [FromBody] nor [FromUri]).
          */
-        // TODO: Why do we use in FC the POST Verb to update a resource, instead of PUT? 
-        // Is it safer? How do we then determine, if we need to update or insert a resource? 
         public void UpdatePerson(int id, Person person)
         {
             //if (!ModelState.IsValid)     
@@ -137,8 +136,10 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            personInDb = person;    // TODO: DeepClone() ? 
-            personInDb.Name = person.Name;
+            //personInDb = person;                                                  // Not working. For Deep Cloning see Memberwise Cloning... 
+            //var serialized = JsonConvert.SerializeObject(person);                 // Not working.
+            //personInDb = JsonConvert.DeserializeObject<Person>(serialized);
+            personInDb.Name = person.Name;                                          // That would do the job, as long as there are not many properties...
             personInDb.Age = person.Age;
         }
 

@@ -180,23 +180,33 @@ namespace WebApplication1.Controllers
         }
 
 
-
-        /*
         // DELETE: api/Camps/5
-        [ResponseType(typeof(Camp))]
-        public IHttpActionResult DeleteCamp(int id)
+        [Route("{moniker}")]
+        public async Task<IHttpActionResult> DeleteCamp(string moniker)              // we don't need the [HttpDelete] here, because the name of our action starts with 'Delete'...
         {
-            Camp camp = db.Camps.Find(id);
-            if (camp == null)
+            try
             {
-                return NotFound();
+                Camp camp = await _repository.GetCampAsync(moniker);
+
+                if (camp == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteCamp(camp);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                    //return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
-            db.Camps.Remove(camp);
-            db.SaveChanges();
-
-            return Ok(camp);
+            return InternalServerError();                                           // if SaveChangesAsync() fails, without an exception...
         }
-        */
     }
 }

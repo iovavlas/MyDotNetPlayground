@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -111,7 +112,7 @@ namespace WebApplication1.Controllers
                     ModelState.AddModelError("Moniker", "Moniker is already in use / not unique!");
                 }
 
-                if (ModelState.IsValid)
+                if (ModelState.IsValid)                                             /* validate the model, according to the data annotation (e.g. [Required]) defined in the CampDto class. */
                 {
                     Camp camp = _mapper.Map<Camp>(campDto);
 
@@ -135,43 +136,52 @@ namespace WebApplication1.Controllers
         }
 
 
-
-        /*
         // PUT: api/Camps/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutCamp(int id, Camp camp)
+        [Route("{moniker}")]
+        [HttpPut]
+        [ResponseType(typeof(CampDto))]
+        public async Task<IHttpActionResult> UpdateCamp(string moniker, CampDto campDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != camp.CampId)
+            if (moniker != campDto.Moniker)
             {
-                return BadRequest();
+                return BadRequest("moniker != Moniker ==> Confusion of da highest order!!! :)");
             }
-
-            db.Entry(camp).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CampExists(id))
+                Camp camp = await _repository.GetCampAsync(moniker); 
+
+                if (camp == null)
                 {
                     return NotFound();
                 }
+
+                _mapper.Map(campDto, camp);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return Ok(_mapper.Map<CampDto>(camp));
+                    //return StatusCode(HttpStatusCode.NoContent);
+                } 
                 else
                 {
-                    throw;
+                    return InternalServerError();
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
+
+
+        /*
         // DELETE: api/Camps/5
         [ResponseType(typeof(Camp))]
         public IHttpActionResult DeleteCamp(int id)

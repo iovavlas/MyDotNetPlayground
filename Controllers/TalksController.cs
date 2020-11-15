@@ -34,10 +34,10 @@ namespace WebApplication1.Controllers
             try
             {
                 Talk[] talks = await _repository.GetTalksByMonikerAsync(moniker, includeSpeakers);
-                
-                if (talks == null || talks.Length == 0)
+
+                if (talks == null || talks.Length == 0)               
                 {
-                    return NotFound();
+                    //return NotFound();                                // in this case return OK with an empty array...
                 }
 
                 //TalkDto[] mappedTalks = _mapper.Map<Talk[], TalkDto[]>(talks);
@@ -46,7 +46,33 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                return InternalServerError(ex);
+            }
+        }
 
+
+        // GET: api/Camps/ATL2018/talk/5
+        // GET: api/Camps/ATL2018/talk/5?includeSpeakers=true           // Query Strings should always be optional.
+        [Route("{id:int}")]                                                 
+        [HttpGet]                                                       
+        [ResponseType(typeof(TalkDto))]                               
+        public async Task<IHttpActionResult> GetTalk(string moniker, int id, bool includeSpeakers = false)
+        {
+            try
+            {
+                Talk talk = await _repository.GetTalkByMonikerAsync(moniker, id, includeSpeakers);
+
+                if (talk == null)
+                {
+                    return NotFound();
+                }
+
+                //TalkDto mappedTalk = _mapper.Map<Talk, TalkDto>(talk);
+                TalkDto mappedTalk = _mapper.Map<TalkDto>(talk);
+                return Ok(mappedTalk);
+            }
+            catch (Exception ex)
+            {
                 return InternalServerError(ex);
             }
         }

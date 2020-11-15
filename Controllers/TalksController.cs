@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
             {
                 Talk[] talks = await _repository.GetTalksByMonikerAsync(moniker, includeSpeakers);
 
-                if (talks == null || talks.Length == 0)               
+                if (talks == null || talks.Length == 0)
                 {
                     //return NotFound();                                // in this case return OK with an empty array...
                 }
@@ -53,9 +53,9 @@ namespace WebApplication1.Controllers
 
         // GET: api/Camps/ATL2018/talks/5
         // GET: api/Camps/ATL2018/talks/5?includeSpeakers=true           // Query Strings should always be optional.
-        [Route("{id:int}", Name="GetTalk")]
-        [HttpGet]                                                       
-        [ResponseType(typeof(TalkDto))]                               
+        [Route("{id:int}", Name = "GetTalk")]
+        [HttpGet]
+        [ResponseType(typeof(TalkDto))]
         public async Task<IHttpActionResult> GetTalk(string moniker, int id, bool includeSpeakers = false)
         {
             try
@@ -76,10 +76,10 @@ namespace WebApplication1.Controllers
                 return InternalServerError(ex);
             }
         }
-        
-        
+
+
         // POST: api/Camps/ATL2018/talks
-        [Route()]                                                 
+        [Route()]
         [HttpPost]
         [ResponseType(typeof(TalkDto))]
         public async Task<IHttpActionResult> Post(string moniker, TalkDto talkDto)
@@ -103,8 +103,8 @@ namespace WebApplication1.Controllers
                     }
                     talk.Camp = camp;
 
-                    // If a speaker id is given, map the speaker to the talk...
-                    if (talkDto.Speaker != null) 
+                    // If a SpeakerId is given, map the speaker to the talk...
+                    if (talkDto.Speaker != null)
                     {
                         Speaker speaker = await _repository.GetSpeakerAsync(talkDto.Speaker.SpeakerId);
                         if (speaker == null)
@@ -131,6 +131,57 @@ namespace WebApplication1.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        // PUT: api/Camps/ATL2018/talks/3
+        [Route("{talkId:int}")]                                                 
+        [HttpPut]
+        [ResponseType(typeof(TalkDto))]
+        public async Task<IHttpActionResult> Put(string moniker, int talkId, TalkDto talkDto)
+        {
+            try
+            {
+                if (talkId != talkDto.TalkId)
+                {
+                    ModelState.AddModelError("TalkId", "talkId != TalkId ==> Confusion of da highest order!!! :)");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    Talk talk = await _repository.GetTalkByMonikerAsync(moniker, talkDto.TalkId, true);
+                    if (talk == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // We don't update the camp (foreign key) here because it's not a part of the TalkDto. See our Mapping Profile too...
+
+                    // If necessary, change the speaker of the talk...
+                    if (talkDto.Speaker != null && talkDto.Speaker.SpeakerId != talk.Speaker.SpeakerId) 
+                    {
+                        Speaker speaker = await _repository.GetSpeakerAsync(talkDto.Speaker.SpeakerId);
+                        if (speaker == null)
+                        {
+                            return BadRequest("No speaker found with this Id..!");
+                        }
+                        talk.Speaker = speaker;                                                                             
+                    }
+
+                    _mapper.Map(talkDto, talk);
+
+                    if (await _repository.SaveChangesAsync())
+                    {
+                        return Ok(_mapper.Map<TalkDto>(talk));
+                        //return StatusCode(HttpStatusCode.NoContent);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return BadRequest(ModelState);              // TODO: on the 2nd call without changing the body --> "exceptionMessage": "The model state is valid.\r\nParameter name: modelState". Why???
         }
     }
 }

@@ -20,8 +20,8 @@ namespace WebApplication1.App_Start
                 .ReverseMap(); 
 
 
-            CreateMap<Speaker, SpeakerDto>();
-            CreateMap<SpeakerDto, Speaker>();
+            CreateMap<Speaker, SpeakerDto>()
+                .ReverseMap();
         }
     }
 }

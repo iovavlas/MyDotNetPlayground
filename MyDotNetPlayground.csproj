@@ -245,6 +245,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\WebApplication1.Models.CampContext.mdf" />
+    <Content Include="App_Data\WebApplication1.Models.CampContext_log.ldf">
+      <DependentUpon>WebApplication1.Models.CampContext.mdf</DependentUpon>
+    </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />

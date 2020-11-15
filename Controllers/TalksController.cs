@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -134,7 +132,7 @@ namespace WebApplication1.Controllers
         }
 
         // PUT: api/Camps/ATL2018/talks/3
-        [Route("{talkId:int}")]                                                 
+        [Route("{talkId:int}")]
         [HttpPut]
         [ResponseType(typeof(TalkDto))]
         public async Task<IHttpActionResult> Put(string moniker, int talkId, TalkDto talkDto)
@@ -157,14 +155,14 @@ namespace WebApplication1.Controllers
                     // We don't update the camp (foreign key) here because it's not a part of the TalkDto. See our Mapping Profile too...
 
                     // If necessary, change the speaker of the talk...
-                    if (talkDto.Speaker != null && talkDto.Speaker.SpeakerId != talk.Speaker.SpeakerId) 
+                    if (talkDto.Speaker != null && talkDto.Speaker.SpeakerId != talk.Speaker.SpeakerId)
                     {
                         Speaker speaker = await _repository.GetSpeakerAsync(talkDto.Speaker.SpeakerId);
                         if (speaker == null)
                         {
                             return BadRequest("No speaker found with this Id..!");
                         }
-                        talk.Speaker = speaker;                                                                             
+                        talk.Speaker = speaker;
                     }
 
                     _mapper.Map(talkDto, talk);
@@ -182,6 +180,37 @@ namespace WebApplication1.Controllers
             }
 
             return BadRequest(ModelState);              // TODO: on the 2nd call without changing the body --> "exceptionMessage": "The model state is valid.\r\nParameter name: modelState". Why???
+        }
+
+
+        // DELETE: api/Camps/ATL2018/talks/3
+        [Route("{talkId:int}")]
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        public async Task<IHttpActionResult> Delete(string moniker, int talkId)
+        {
+            try
+            {
+                Talk talk = await _repository.GetTalkByMonikerAsync(moniker, talkId, true);
+                if (talk == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteTalk(talk);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    //return Ok();
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return InternalServerError();
         }
     }
 }

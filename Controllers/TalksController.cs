@@ -95,7 +95,7 @@ namespace WebApplication1.Controllers
                 {
                     Talk talk = _mapper.Map<Talk>(talkDto);
 
-                    // Map the camp to the talk (foreign key)...
+                    // Map the camp to the talk (camp is here a foreign key for the Talk class/model and it's not a part of the TalkDto)...
                     Camp camp = await _repository.GetCampAsync(moniker);
                     if (camp == null)
                     {

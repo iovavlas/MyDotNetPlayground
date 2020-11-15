@@ -32,6 +32,7 @@ namespace WebApplication1.Controllers
             try
             {
                 result = await _repository.GetAllCampsAsync(includeTalks);
+
             }
             catch (Exception ex)
             {

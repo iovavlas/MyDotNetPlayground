@@ -16,8 +16,8 @@ namespace WebApplication1.App_Start
                 .ReverseMap();
 
 
-            CreateMap<Talk, TalkDto>();
-            CreateMap<TalkDto, Talk>();
+            CreateMap<Talk, TalkDto>()
+                .ReverseMap(); 
 
 
             CreateMap<Speaker, SpeakerDto>();

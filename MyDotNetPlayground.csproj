@@ -202,6 +202,7 @@
     <Compile Include="Controllers\CampsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\TalksController.cs" />
     <Compile Include="Dtos\SpeakerDto.cs" />
     <Compile Include="Dtos\TalkDto.cs" />

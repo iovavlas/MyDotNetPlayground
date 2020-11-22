@@ -9,7 +9,7 @@ namespace WebApplication1.Controllers
 {
     public class OperationsController : ApiController
     {
-        [HttpOptions]
+        [HttpOptions]                       // we use another HTTP verb here, not the usual REST ones...
         [Route("api/operation1")]
         public IHttpActionResult DoSomeShitOnTheServer()
         {

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Web.Http;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,17 @@ namespace WebApplication1
             // Web API configuration and services
             AutofacConfig.Register();       // DI
 
-            // Web API routes
+            // Web API Versioning configuration
+            config.AddApiVersioning(cfg =>
+            {
+                /* Without any configuration, we must include the version in every request --> ?api-version=1.0 */
+                cfg.DefaultApiVersion = new ApiVersion(1, 0);
+                cfg.AssumeDefaultVersionWhenUnspecified = true;         // With that, we don't have to include the version every time...
+                cfg.ReportApiVersions = true;                           // With that, we get a new header "api-supported-versions" with the Response.
 
+            });
+
+            // Web API routes
             // Enable Attribute routing.
             config.MapHttpAttributeRoutes();
 

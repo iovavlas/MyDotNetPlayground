@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.Http;
+using Microsoft.Web.Http.Versioning;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -22,8 +23,9 @@ namespace WebApplication1
             {
                 /* Without any configuration, we must include the version in every request --> ?api-version=1.0 */
                 cfg.DefaultApiVersion = new ApiVersion(1, 0);
-                cfg.AssumeDefaultVersionWhenUnspecified = true;         // With that, we don't have to include the version every time...
-                cfg.ReportApiVersions = true;                           // With that, we get a new header "api-supported-versions" with the Response.
+                cfg.AssumeDefaultVersionWhenUnspecified = true;                     // With that, we don't have to include the version every time...
+                cfg.ReportApiVersions = true;                                       // With that, we get a new header "api-supported-versions" with the Response.
+                cfg.ApiVersionReader = new HeaderApiVersionReader("X-Version");     // Use this new custom header to specify the version, instead of using '?api-version' in the URL.
 
             });
 

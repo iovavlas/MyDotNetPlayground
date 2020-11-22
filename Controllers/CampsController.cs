@@ -9,7 +9,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    [ApiVersion("1.0")]                         // API supported versions for the controller (see Response headers)...
+    [ApiVersion("1.0")]                         // API supported versions for the controller...
     [ApiVersion("1.1")]
     [RoutePrefix("api/camps")]
     public class CampsController : ApiController

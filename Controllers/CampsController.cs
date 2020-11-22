@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Web.Http;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [ApiVersion("1.0")]                         // API supported versions for the controller (see Response headers)...
+    [ApiVersion("1.1")]
     [RoutePrefix("api/camps")]
     public class CampsController : ApiController
     {
@@ -47,7 +50,8 @@ namespace WebApplication1.Controllers
         }
 
 
-        // GET: api/Camps/5
+        // GET: api/Camps/5 (api-version=1.0)
+        [MapToApiVersion("1.0")]
         [Route("{moniker}", Name = "GetCamp")]
         [ResponseType(typeof(CampDto))]         // useful when returning an IHttpActionResult...
         public async Task<IHttpActionResult> GetCamp(string moniker, bool includeTalks = false)
@@ -57,6 +61,35 @@ namespace WebApplication1.Controllers
             try
             {
                 result = await _repository.GetCampAsync(moniker, includeTalks);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return InternalServerError(ex);
+            }
+
+            // Mapping (Model/Entity --> Dto)
+            CampDto mappedResult = _mapper.Map<CampDto>(result);
+            return Ok(mappedResult);
+        }
+
+
+        // GET: api/Camps/5 (api-version=1.1)
+        [MapToApiVersion("1.1")]
+        [Route("{moniker}", Name = "GetCampV1.1")]
+        [ResponseType(typeof(CampDto))]
+        public async Task<IHttpActionResult> GetCamp(string moniker)
+        {
+            Camp result;
+
+            try
+            {
+                result = await _repository.GetCampAsync(moniker, true);
 
                 if (result == null)
                 {
